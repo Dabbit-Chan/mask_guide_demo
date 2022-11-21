@@ -11,27 +11,41 @@ class MaskGuideWidget extends StatefulWidget {
     this.guideTexts,
     this.customStepWidget,
     required this.overlay,
+    required this.needAnimate,
+    required this.canPop,
+    required this.canDismiss,
+    this.dismissCallBack,
+    this.doneCallBack,
   }) : super(key: key);
 
+  /// 主要
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
   final StepWidget? customStepWidget;
   final OverlayEntry overlay;
+  /// 次要
+  final bool needAnimate;
+  final bool canPop;
+  final bool canDismiss;
+  final Function? dismissCallBack;
+  final Function? doneCallBack;
 
   @override
   State<MaskGuideWidget> createState() => _MaskGuideWidgetState();
 }
 
 class _MaskGuideWidgetState extends State<MaskGuideWidget> {
-  final _ctrl = Get.put(MaskController());
+  final MaskController _ctrl = Get.put(MaskController());
 
   @override
   void initState() {
     super.initState();
+    _ctrl.canPop = widget.canPop;
     _ctrl.done.stream.listen((done) {
       if (done) {
         widget.overlay.remove();
         Get.delete<MaskController>();
+        widget.doneCallBack?.call();
       }
     });
   }
@@ -42,46 +56,57 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
       color: Colors.transparent,
       child: Stack(
         children: [
-          ColorFiltered(
-            // 源图像，使用srcOut
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(.8),
-              BlendMode.srcOut,
-            ),
-            child: Stack(
-              children: [
-                // 目标图像
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    backgroundBlendMode: BlendMode.dstOut,
+          InkWell(
+            splashColor: Colors.transparent,
+            onTap: () {
+              if (widget.canDismiss) {
+                widget.overlay.remove();
+                Get.delete<MaskController>();
+                widget.dismissCallBack?.call();
+              }
+            },
+            child: ColorFiltered(
+              // 源图像，使用srcOut
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(.8),
+                BlendMode.srcOut,
+              ),
+              child: Stack(
+                children: [
+                  // 目标图像
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      backgroundBlendMode: BlendMode.dstOut,
+                    ),
                   ),
-                ),
-                Obx(() {
-                  RenderBox renderBox = widget.keys[_ctrl.step.value].currentContext?.findRenderObject() as RenderBox;
-                  return AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
-                    left: renderBox.localToGlobal(Offset.zero).dx,
-                    top: renderBox.localToGlobal(Offset.zero).dy,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
+                  Obx(() {
+                    RenderBox renderBox = widget.keys[_ctrl.step.value].currentContext?.findRenderObject() as RenderBox;
+                    return AnimatedPositioned(
+                      duration: widget.needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
+                      left: renderBox.localToGlobal(Offset.zero).dx,
+                      top: renderBox.localToGlobal(Offset.zero).dy,
+                      child: Container(
+                        width: renderBox.size.width,
+                        height: renderBox.size.height,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
                         ),
                       ),
-                      width: renderBox.size.width,
-                      height: renderBox.size.height,
-                    ),
-                  );
-                }),
-              ],
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
-          // 这里同样通过key可以拿到位置信息，然后显示步骤描述即可
+
           widget.customStepWidget ?? DefaultStepWidget(
             keys: widget.keys,
             guideTexts: widget.guideTexts,
+            needAnimate: widget.needAnimate,
           ),
         ],
       ),

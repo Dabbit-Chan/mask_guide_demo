@@ -7,10 +7,12 @@ class DefaultStepWidget extends StepWidget {
     Key? key,
     required this.keys,
     this.guideTexts,
+    required this.needAnimate,
   }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
+  final bool needAnimate;
 
   final TextStyle _textStyle = const TextStyle(
     fontSize: 12,
@@ -50,7 +52,7 @@ class DefaultStepWidget extends StepWidget {
       }
 
       return AnimatedPositioned(
-        duration: const Duration(milliseconds: 300),
+        duration: needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
         top: top,
         bottom: bottom,
         right: right,
