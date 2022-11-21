@@ -8,12 +8,12 @@ class MyStepWidget extends StepWidget {
     Key? key,
     required this.keys,
     this.guideTexts,
-    required this.callBack,
-  }) : super(key: key);
+    required this.removeEntry,
+  }) : super(key: key, remove: removeEntry);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
-  final Function? callBack;
+  final Function? removeEntry;
 
   final TextStyle _textStyle = const TextStyle(
     fontSize: 12,
@@ -26,12 +26,6 @@ class MyStepWidget extends StepWidget {
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: Get.width * 2 / 3, minWidth: 82);
     return Size(textPainter.size.width + 10, textPainter.size.height + 10);
-  }
-
-  @override
-  void doneCallBack() {
-    super.doneCallBack();
-    callBack?.call();
   }
 
   double divide = 10;
@@ -52,6 +46,7 @@ class MyStepWidget extends StepWidget {
         top = null;
         bottom = Get.height - renderBox.localToGlobal(Offset.zero).dy + divide;
       }
+
       if (left + stepWidgetSize(guideTexts![step]).width > Get.width) {
         left = null;
         right = Get.width - renderBox.localToGlobal(Offset.zero).dx - renderBox.size.width;

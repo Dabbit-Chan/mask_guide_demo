@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mask_guide/mask_controller.dart';
 import 'package:mask_guide/mask_guide_step_widget.dart';
+import 'package:mask_guide/step_widget.dart';
 
 class MaskGuideWidget extends StatefulWidget {
   const MaskGuideWidget({
     Key? key,
     required this.keys,
     this.guideTexts,
-    this.doneCallBack,
     this.customStepWidget,
+    this.removeEntry,
   }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
-  final Widget? customStepWidget;
-  final Function? doneCallBack;
+  final StepWidget? customStepWidget;
+  final Function? removeEntry;
 
   @override
   State<MaskGuideWidget> createState() => _MaskGuideWidgetState();
@@ -71,7 +72,7 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
             keys: widget.keys,
             guideTexts: widget.guideTexts,
             customStepWidget: widget.customStepWidget,
-            doneCallBack: widget.doneCallBack,
+            removeEntry: widget.removeEntry,
           ),
         ],
       ),

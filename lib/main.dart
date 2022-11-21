@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_guide/custom_step_widget.dart';
 import 'package:mask_guide/mask_guide.dart';
 
 void main() {
@@ -51,14 +52,16 @@ class _MyHomePageState extends State<MyHomePage> {
     maskGuide.showMaskGuide(
       context: context,
       keys: [appBarKey, textKey, countKey, buttonKey],
-      customStepWidget: Container(),
+      customStepWidget: CustomStepWidget(
+        keys: [appBarKey, textKey, countKey, buttonKey],
+      ),
     );
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => showMaskGuide());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => showMaskGuide());
   }
 
   @override

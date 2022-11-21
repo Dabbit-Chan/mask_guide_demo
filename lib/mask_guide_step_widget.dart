@@ -7,13 +7,13 @@ class MaskGuideStepWidget extends StatefulWidget {
     required this.keys,
     this.guideTexts,
     this.customStepWidget,
-    required this.doneCallBack,
+    required this.removeEntry,
   }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
   final Widget? customStepWidget;
-  final Function? doneCallBack;
+  final Function? removeEntry;
 
   @override
   State<MaskGuideStepWidget> createState() => _MaskGuideStepWidgetState();
@@ -25,7 +25,7 @@ class _MaskGuideStepWidgetState extends State<MaskGuideStepWidget> {
     return widget.customStepWidget ?? MyStepWidget(
       keys: widget.keys,
       guideTexts: widget.guideTexts,
-      callBack: widget.doneCallBack,
+      removeEntry: widget.removeEntry,
     );
   }
 }

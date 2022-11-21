@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mask_guide/mask_controller.dart';
 
+// ignore: must_be_immutable
 abstract class StepWidget extends StatelessWidget {
-  StepWidget({Key? key}) : super(key: key);
+  StepWidget({super.key, this.remove});
+  Function? remove;
 
-  final _ctrl = Get.put(MaskController());
-
+  final MaskController _ctrl = Get.put(MaskController());
   int get step => _ctrl.step.value;
 
   void preStep() {
@@ -18,6 +19,7 @@ abstract class StepWidget extends StatelessWidget {
   }
 
   void doneCallBack() {
+    remove!.call();
     Get.delete<MaskController>();
   }
 }
