@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mask_guide/default_step_widget.dart';
 import 'package:mask_guide/mask_controller.dart';
-import 'package:mask_guide/mask_guide_step_widget.dart';
 import 'package:mask_guide/step_widget.dart';
 
 class MaskGuideWidget extends StatefulWidget {
@@ -10,13 +10,13 @@ class MaskGuideWidget extends StatefulWidget {
     required this.keys,
     this.guideTexts,
     this.customStepWidget,
-    this.removeEntry,
+    required this.overlay,
   }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
   final StepWidget? customStepWidget;
-  final Function? removeEntry;
+  final OverlayEntry overlay;
 
   @override
   State<MaskGuideWidget> createState() => _MaskGuideWidgetState();
@@ -24,6 +24,17 @@ class MaskGuideWidget extends StatefulWidget {
 
 class _MaskGuideWidgetState extends State<MaskGuideWidget> {
   final _ctrl = Get.put(MaskController());
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl.done.stream.listen((done) {
+      if (done) {
+        widget.overlay.remove();
+        Get.delete<MaskController>();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,11 +79,9 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
             ),
           ),
           // 这里同样通过key可以拿到位置信息，然后显示步骤描述即可
-          MaskGuideStepWidget(
+          widget.customStepWidget ?? DefaultStepWidget(
             keys: widget.keys,
             guideTexts: widget.guideTexts,
-            customStepWidget: widget.customStepWidget,
-            removeEntry: widget.removeEntry,
           ),
         ],
       ),

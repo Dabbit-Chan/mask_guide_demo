@@ -4,22 +4,20 @@ import 'package:mask_guide/mask_controller.dart';
 
 // ignore: must_be_immutable
 abstract class StepWidget extends StatelessWidget {
-  StepWidget({super.key, this.remove});
-  Function? remove;
+  StepWidget({super.key});
 
   final MaskController _ctrl = Get.put(MaskController());
   int get step => _ctrl.step.value;
 
   void preStep() {
-    _ctrl.step.value--;
+    _ctrl.preStep();
   }
 
   void nextStep() {
-    _ctrl.step.value++;
+    _ctrl.nextStep();
   }
 
   void doneCallBack() {
-    remove!.call();
-    Get.delete<MaskController>();
+    _ctrl.done.value = true;
   }
 }

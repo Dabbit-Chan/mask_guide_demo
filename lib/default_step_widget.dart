@@ -3,17 +3,15 @@ import 'package:get/get.dart';
 import 'package:mask_guide/step_widget.dart';
 
 // ignore: must_be_immutable
-class MyStepWidget extends StepWidget {
-  MyStepWidget({
+class DefaultStepWidget extends StepWidget {
+  DefaultStepWidget({
     Key? key,
     required this.keys,
     this.guideTexts,
-    required this.removeEntry,
-  }) : super(key: key, remove: removeEntry);
+  }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
-  final Function? removeEntry;
 
   final TextStyle _textStyle = const TextStyle(
     fontSize: 12,

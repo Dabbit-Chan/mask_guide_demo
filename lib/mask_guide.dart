@@ -25,16 +25,10 @@ class MaskGuide {
         keys: keys,
         guideTexts: guideTexts,
         customStepWidget: customStepWidget,
-        removeEntry: () {
-          overlayEntry.remove();
-        },
+        overlay: overlayEntry,
       ),
     );
 
-    customStepWidget?.remove = () {
-      overlayEntry.remove();
-    };
-
-    Overlay.of(context)?.insert(overlayEntry);
+    Overlay.of(context)!.insert(overlayEntry);
   }
 }
