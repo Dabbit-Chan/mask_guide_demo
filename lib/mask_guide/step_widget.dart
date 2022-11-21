@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mask_guide/mask_controller.dart';
+import 'package:mask_guide/mask_guide/mask_controller.dart';
 
-// ignore: must_be_immutable
 abstract class StepWidget extends StatelessWidget {
   StepWidget({super.key});
 

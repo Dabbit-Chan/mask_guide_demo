@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mask_guide/step_widget.dart';
+import 'package:mask_guide/mask_guide/step_widget.dart';
 
-// ignore: must_be_immutable
 class CustomStepWidget extends StepWidget {
   CustomStepWidget({
     Key? key,

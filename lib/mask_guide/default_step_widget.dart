@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mask_guide/step_widget.dart';
+import 'package:mask_guide/mask_guide/step_widget.dart';
 
-// ignore: must_be_immutable
 class DefaultStepWidget extends StepWidget {
   DefaultStepWidget({
     Key? key,
@@ -26,7 +25,7 @@ class DefaultStepWidget extends StepWidget {
     return Size(textPainter.size.width + 10, textPainter.size.height + 10);
   }
 
-  double divide = 10;
+  final double divide = 10;
 
   @override
   Widget build(BuildContext context) {

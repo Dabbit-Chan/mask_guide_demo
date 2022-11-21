@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_guide/custom_step_widget.dart';
-import 'package:mask_guide/mask_guide.dart';
+import 'package:mask_guide/mask_guide/mask_guide.dart';
 
 void main() {
   runApp(const MyApp());

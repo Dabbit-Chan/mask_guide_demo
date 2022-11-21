@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mask_guide/mask_guide_widget.dart';
-import 'package:mask_guide/step_widget.dart';
+import 'package:mask_guide/mask_guide/mask_guide_widget.dart';
+import 'package:mask_guide/mask_guide/step_widget.dart';
 
 class MaskGuide {
   late OverlayEntry overlayEntry;

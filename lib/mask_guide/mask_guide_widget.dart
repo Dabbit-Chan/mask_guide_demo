@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mask_guide/default_step_widget.dart';
-import 'package:mask_guide/mask_controller.dart';
-import 'package:mask_guide/step_widget.dart';
+import 'package:mask_guide/mask_guide/default_step_widget.dart';
+import 'package:mask_guide/mask_guide/mask_controller.dart';
+import 'package:mask_guide/mask_guide/step_widget.dart';
 
 class MaskGuideWidget extends StatefulWidget {
   const MaskGuideWidget({
