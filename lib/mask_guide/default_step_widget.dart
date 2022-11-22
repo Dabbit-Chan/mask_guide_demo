@@ -6,31 +6,51 @@ class DefaultStepWidget extends StepWidget {
     Key? key,
     required this.keys,
     this.guideTexts,
+
     required this.needAnimate,
     this.nextStepCallBacks,
     this.preStepCallBacks,
+
+    required this.divide,
+    required this.maxWidthScale,
+    required this.nextText,
+    required this.preText,
+    required this.doneText,
+    required this.guideTextStyle,
+    required this.stepTextStyle,
+    required this.padding,
+    required this.borderRadius,
+    required this.stepColor,
   }) : super(key: key);
 
+  /// 主要
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
+
+  /// 次要
   final bool needAnimate;
   final List<Function>? nextStepCallBacks;
   final List<Function>? preStepCallBacks;
 
-  final TextStyle _textStyle = const TextStyle(
-    fontSize: 12,
-    color: Colors.black,
-  );
+  /// UI
+  final double divide;
+  final double maxWidthScale;
+  final String nextText;
+  final String preText;
+  final String doneText;
+  final TextStyle guideTextStyle;
+  final TextStyle stepTextStyle;
+  final EdgeInsets padding;
+  final BorderRadius borderRadius;
+  final Color stepColor;
 
   Size stepWidgetSize(BuildContext context, String text) {
     final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: _textStyle),
+      text: TextSpan(text: text, style: guideTextStyle),
       textDirection: TextDirection.ltr,
-    )..layout(maxWidth: MediaQuery.of(context).size.width * 2 / 3, minWidth: 82);
-    return Size(textPainter.size.width + 10, textPainter.size.height + 10);
+    )..layout(maxWidth: MediaQuery.of(context).size.width * maxWidthScale, minWidth: 82);
+    return Size(textPainter.size.width + padding.left + padding.right, textPainter.size.height + padding.top + padding.bottom);
   }
-
-  final double divide = 10;
 
   @override
   void preStep() {
@@ -81,20 +101,20 @@ class DefaultStepWidget extends StepWidget {
           right: right,
           left: left,
           child: Container(
-            padding: const EdgeInsets.all(5),
+            padding: padding,
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 2 / 3,
+              maxWidth: MediaQuery.of(context).size.width * maxWidthScale,
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: borderRadius,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   guideTexts![step],
-                  style: _textStyle,
+                  style: guideTextStyle,
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -107,8 +127,8 @@ class DefaultStepWidget extends StepWidget {
                         }
                       },
                       child: Text(
-                        step == 0 ? '' : '上一步',
-                        style: _textStyle,
+                        step == 0 ? '' : preText,
+                        style: stepTextStyle,
                       ),
                     ),
                     Visibility(
@@ -124,8 +144,8 @@ class DefaultStepWidget extends StepWidget {
                         }
                       },
                       child: Text(
-                        step >= keys.length - 1 ? '结束' : '下一步',
-                        style: _textStyle.copyWith(color: Colors.blue),
+                        step >= keys.length - 1 ? doneText : nextText,
+                        style: stepTextStyle,
                       ),
                     ),
                   ],

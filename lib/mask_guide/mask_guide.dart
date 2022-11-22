@@ -19,6 +19,19 @@ class MaskGuide {
     Function? doneCallBack,
     List<Function>? nextStepCallBacks,
     List<Function>? preStepCallBacks,
+    /// UI
+    double? divide,
+    EdgeInsets? margin,
+    /// stepWidget UI
+    double? maxWidthScale,
+    String? nextText,
+    String? preText,
+    String? doneText,
+    TextStyle? guideTextStyle,
+    TextStyle? stepTextStyle,
+    EdgeInsets? stepPadding,
+    BorderRadius? stepBorderRadius,
+    Color? stepColor,
   }) {
     if (customStepWidget == null && guideTexts == null) {
       throw('自定义提示组件和需要展示的提示其中一个必不能为空');
@@ -46,6 +59,23 @@ class MaskGuide {
         doneCallBack: doneCallBack,
         nextStepCallBacks: nextStepCallBacks,
         preStepCallBacks: preStepCallBacks,
+        divide: divide ?? 10,
+        margin: margin ?? EdgeInsets.zero,
+        maxWidthScale: maxWidthScale ?? 2/3,
+        nextText: nextText ?? '下一个',
+        preText: preText ?? '上一个',
+        doneText: doneText ?? '完成',
+        guideTextStyle: guideTextStyle ?? const TextStyle(
+          fontSize: 12,
+          color: Colors.black,
+        ),
+        stepTextStyle: stepTextStyle ?? const TextStyle(
+          fontSize: 12,
+          color: Colors.blue,
+        ),
+        stepPadding: stepPadding ?? const EdgeInsets.all(5),
+        stepBorderRadius: stepBorderRadius ?? BorderRadius.circular(10),
+        stepColor: stepColor ?? Colors.white,
       ),
     );
 
