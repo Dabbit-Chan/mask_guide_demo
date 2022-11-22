@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mask_guide/mask_guide/step_widget.dart';
 
 class DefaultStepWidget extends StepWidget {
@@ -23,11 +22,11 @@ class DefaultStepWidget extends StepWidget {
     color: Colors.black,
   );
 
-  Size stepWidgetSize(String text) {
+  Size stepWidgetSize(BuildContext context, String text) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(text: text, style: _textStyle),
       textDirection: TextDirection.ltr,
-    )..layout(maxWidth: Get.width * 2 / 3, minWidth: 82);
+    )..layout(maxWidth: MediaQuery.of(context).size.width * 2 / 3, minWidth: 82);
     return Size(textPainter.size.width + 10, textPainter.size.height + 10);
   }
 
@@ -53,86 +52,89 @@ class DefaultStepWidget extends StepWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      double? top;
-      double? bottom;
-      double? left;
-      double? right;
-      RenderBox renderBox = keys[step].currentContext?.findRenderObject() as RenderBox;
-      // 默认位置为左下
-      top = renderBox.localToGlobal(Offset.zero).dy + renderBox.size.height + divide;
-      left = renderBox.localToGlobal(Offset.zero).dx;
+    return ValueListenableBuilder(
+      valueListenable: stepNotifier,
+      builder: (context, value, child) {
+        double? top;
+        double? bottom;
+        double? left;
+        double? right;
+        RenderBox renderBox = keys[step].currentContext?.findRenderObject() as RenderBox;
+        // 默认位置为左下
+        top = renderBox.localToGlobal(Offset.zero).dy + renderBox.size.height + divide;
+        left = renderBox.localToGlobal(Offset.zero).dx;
 
-      if (top + stepWidgetSize(guideTexts![step]).height > Get.height) {
-        top = null;
-        bottom = Get.height - renderBox.localToGlobal(Offset.zero).dy + divide;
-      }
+        if (top + stepWidgetSize(context, guideTexts![step]).height > MediaQuery.of(context).size.height) {
+          top = null;
+          bottom = MediaQuery.of(context).size.height - renderBox.localToGlobal(Offset.zero).dy + divide;
+        }
 
-      if (left + stepWidgetSize(guideTexts![step]).width > Get.width) {
-        left = null;
-        right = Get.width - renderBox.localToGlobal(Offset.zero).dx - renderBox.size.width;
-      }
+        if (left + stepWidgetSize(context, guideTexts![step]).width > MediaQuery.of(context).size.width) {
+          left = null;
+          right = MediaQuery.of(context).size.width - renderBox.localToGlobal(Offset.zero).dx - renderBox.size.width;
+        }
 
-      return AnimatedPositioned(
-        duration: needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
-        top: top,
-        bottom: bottom,
-        right: right,
-        left: left,
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          constraints: BoxConstraints(
-            maxWidth: Get.width * 2 / 3,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                guideTexts![step],
-                style: _textStyle,
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      if (step != 0) {
-                        preStep();
-                      }
-                    },
-                    child: Text(
-                      step == 0 ? '' : '上一步',
-                      style: _textStyle,
+        return AnimatedPositioned(
+          duration: needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
+          top: top,
+          bottom: bottom,
+          right: right,
+          left: left,
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 2 / 3,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  guideTexts![step],
+                  style: _textStyle,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (step != 0) {
+                          preStep();
+                        }
+                      },
+                      child: Text(
+                        step == 0 ? '' : '上一步',
+                        style: _textStyle,
+                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: step != 0,
-                    child: const SizedBox(width: 10),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (step >= keys.length - 1) {
-                        doneCallBack.call();
-                      } else {
-                        nextStep();
-                      }
-                    },
-                    child: Text(
-                      step >= keys.length - 1 ? '结束' : '下一步',
-                      style: _textStyle.copyWith(color: Colors.blue),
+                    Visibility(
+                      visible: step != 0,
+                      child: const SizedBox(width: 10),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    InkWell(
+                      onTap: () {
+                        if (step >= keys.length - 1) {
+                          doneCallBack.call();
+                        } else {
+                          nextStep();
+                        }
+                      },
+                      child: Text(
+                        step >= keys.length - 1 ? '结束' : '下一步',
+                        style: _textStyle.copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mask_guide/mask_guide/default_step_widget.dart';
 import 'package:mask_guide/mask_guide/mask_controller.dart';
 import 'package:mask_guide/mask_guide/step_widget.dart';
@@ -39,19 +38,24 @@ class MaskGuideWidget extends StatefulWidget {
 }
 
 class _MaskGuideWidgetState extends State<MaskGuideWidget> {
-  final MaskController _ctrl = Get.put(MaskController());
+  final MaskController controller = MaskController();
+
+  void doneListener() {
+    if (controller.done.value) {
+      controller.done.removeListener(doneListener);
+      controller.done.value = false;
+      controller.step.value = 0;
+
+      widget.overlay.remove();
+      widget.dismissCallBack?.call();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _ctrl.canPop = widget.canPop;
-    _ctrl.done.stream.listen((done) {
-      if (done) {
-        widget.overlay.remove();
-        Get.delete<MaskController>();
-        widget.doneCallBack?.call();
-      }
-    });
+    controller.canPop = widget.canPop;
+    controller.done.addListener(doneListener);
   }
 
   @override
@@ -64,8 +68,11 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
             splashColor: Colors.transparent,
             onTap: () {
               if (widget.canDismiss) {
+                controller.done.removeListener(doneListener);
+                controller.done.value = false;
+                controller.step.value = 0;
+
                 widget.overlay.remove();
-                Get.delete<MaskController>();
                 widget.dismissCallBack?.call();
               }
             },
@@ -84,24 +91,27 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
                       backgroundBlendMode: BlendMode.dstOut,
                     ),
                   ),
-                  Obx(() {
-                    RenderBox renderBox = widget.keys[_ctrl.step.value].currentContext?.findRenderObject() as RenderBox;
-                    return AnimatedPositioned(
-                      duration: widget.needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
-                      left: renderBox.localToGlobal(Offset.zero).dx,
-                      top: renderBox.localToGlobal(Offset.zero).dy,
-                      child: Container(
-                        width: renderBox.size.width,
-                        height: renderBox.size.height,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                  ValueListenableBuilder(
+                    valueListenable: controller.step,
+                    builder: (context, value, child) {
+                      RenderBox renderBox = widget.keys[controller.step.value].currentContext?.findRenderObject() as RenderBox;
+                      return AnimatedPositioned(
+                        duration: widget.needAnimate ? const Duration(milliseconds: 300) : Duration.zero,
+                        left: renderBox.localToGlobal(Offset.zero).dx,
+                        top: renderBox.localToGlobal(Offset.zero).dy,
+                        child: Container(
+                          width: renderBox.size.width,
+                          height: renderBox.size.height,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

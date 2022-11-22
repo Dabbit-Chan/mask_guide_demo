@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       navigatorObservers: [MaskGuideNavigatorObserver()],
-      home: FirstPage(),
+      home: const FirstPage(),
     );
   }
 }
@@ -90,10 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
     RenderBox renderBox = greenKey.currentContext?.findRenderObject() as RenderBox;
     double offset = renderBox.localToGlobal(Offset.zero).dy;
     await scrollController.animateTo(offset, duration: const Duration(milliseconds: 600), curve: Curves.linear);
-  }
-
-  Future<void> scrollUp() async {
-    await scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.linear);
   }
 
   void showMaskGuide({required bool canPop, required bool canDismiss}) {

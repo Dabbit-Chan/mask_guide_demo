@@ -1,8 +1,16 @@
-import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 
-class MaskController extends GetxController{
-  final RxInt step = 0.obs;
-  final RxBool done = false.obs;
+class MaskController {
+  static MaskController? _instance;
+
+  MaskController._internal() {
+    _instance = this;
+  }
+
+  factory MaskController() => _instance ?? MaskController._internal();
+
+  final ValueNotifier<int> step = ValueNotifier(0);
+  final ValueNotifier<bool> done = ValueNotifier(false);
   bool canPop = false;
 
   void preStep() {

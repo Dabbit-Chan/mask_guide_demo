@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mask_guide/mask_guide/mask_controller.dart';
 
 abstract class StepWidget extends StatelessWidget {
   StepWidget({super.key});
 
-  final MaskController _ctrl = Get.put(MaskController());
-  int get step => _ctrl.step.value;
+  final MaskController controller = MaskController();
+  ValueNotifier<int> get stepNotifier => controller.step;
+  int get step => stepNotifier.value;
 
   void preStep() {
-    _ctrl.preStep();
+    controller.preStep();
   }
 
   void nextStep() {
-    _ctrl.nextStep();
+    controller.nextStep();
   }
 
   void doneCallBack() {
-    _ctrl.done.value = true;
+    controller.done.value = true;
   }
 }
