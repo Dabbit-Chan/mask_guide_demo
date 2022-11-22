@@ -69,7 +69,9 @@ class CustomStepWidget extends StepWidget {
             }
           },
           onDoubleTap: () {
-            preStep();
+            if (step != 0) {
+              preStep();
+            }
           },
           child: Container(
             height: stepHeight,

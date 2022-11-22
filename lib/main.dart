@@ -49,11 +49,13 @@ class _FirstPageState extends State<FirstPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Auto Show:'),
-                Switch(value: autoStart, onChanged: (value) {
-                  setState(() {
-                    autoStart = value;
-                  });
-                }),
+                Switch(
+                    value: autoStart,
+                    onChanged: (value) {
+                      setState(() {
+                        autoStart = value;
+                      });
+                    }),
               ],
             )
           ],
@@ -80,8 +82,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final MaskGuide maskGuide = MaskGuide();
 
+  ScrollController scrollController = ScrollController();
   bool pop = false;
   bool prevent = false;
+
+  Future<void> scrollDown() async {
+    RenderBox renderBox = greenKey.currentContext?.findRenderObject() as RenderBox;
+    double offset = renderBox.localToGlobal(Offset.zero).dy;
+    await scrollController.animateTo(offset, duration: const Duration(milliseconds: 600), curve: Curves.linear);
+  }
+
+  Future<void> scrollUp() async {
+    await scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.linear);
+  }
 
   void showMaskGuide({required bool canPop, required bool canDismiss}) {
     if (canPop) {
@@ -106,7 +119,19 @@ class _MyHomePageState extends State<MyHomePage> {
         prevent = false;
         pop = true;
         print('default dismiss');
-      }
+      },
+      nextStepCallBacks: [
+        () {},
+        () {},
+        () => scrollDown(),
+        () {},
+      ],
+      preStepCallBacks: [
+        () {},
+        () {},
+        () {},
+        () async => await scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.linear),
+      ],
     );
   }
 
@@ -219,45 +244,44 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    key: redKey,
-                    width: 50,
-                    height: 50,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 30),
-                  Container(
-                    key: yellowKey,
-                    width: 50,
-                    height: 50,
-                    color: Colors.yellow,
-                  ),
-                  const SizedBox(height: 30),
-                  Container(
-                    key: blueKey,
-                    width: 50,
-                    height: 50,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(height: 30),
-                  Container(
-                    key: greenKey,
-                    width: 50,
-                    height: 50,
-                    color: Colors.green,
-                  ),
-                ],
+              const VerticalDivider(),
+              SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      key: redKey,
+                      width: 50,
+                      height: 50,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 200),
+                    Container(
+                      key: yellowKey,
+                      width: 50,
+                      height: 50,
+                      color: Colors.yellow,
+                    ),
+                    const SizedBox(height: 200),
+                    Container(
+                      key: blueKey,
+                      width: 50,
+                      height: 50,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(height: 200),
+                    Container(
+                      key: greenKey,
+                      width: 50,
+                      height: 50,
+                      color: Colors.green,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
         ),
       ),
     );

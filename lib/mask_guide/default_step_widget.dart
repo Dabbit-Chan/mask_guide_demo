@@ -8,11 +8,15 @@ class DefaultStepWidget extends StepWidget {
     required this.keys,
     this.guideTexts,
     required this.needAnimate,
+    this.nextStepCallBacks,
+    this.preStepCallBacks,
   }) : super(key: key);
 
   final List<GlobalKey> keys;
   final List<String>? guideTexts;
   final bool needAnimate;
+  final List<Function>? nextStepCallBacks;
+  final List<Function>? preStepCallBacks;
 
   final TextStyle _textStyle = const TextStyle(
     fontSize: 12,
@@ -28,6 +32,24 @@ class DefaultStepWidget extends StepWidget {
   }
 
   final double divide = 10;
+
+  @override
+  void preStep() {
+    try {
+      preStepCallBacks?[step].call().then((_) => super.preStep());
+    } catch(_) {
+      super.preStep();
+    }
+  }
+
+  @override
+  void nextStep() {
+    try {
+      nextStepCallBacks?[step].call().then((_) => super.nextStep());
+    } catch(_) {
+      super.nextStep();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +101,9 @@ class DefaultStepWidget extends StepWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      preStep();
+                      if (step != 0) {
+                        preStep();
+                      }
                     },
                     child: Text(
                       step == 0 ? '' : '上一步',

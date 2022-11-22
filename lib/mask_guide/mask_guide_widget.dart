@@ -16,6 +16,8 @@ class MaskGuideWidget extends StatefulWidget {
     required this.canDismiss,
     this.dismissCallBack,
     this.doneCallBack,
+    this.nextStepCallBacks,
+    this.preStepCallBacks,
   }) : super(key: key);
 
   /// 主要
@@ -29,6 +31,8 @@ class MaskGuideWidget extends StatefulWidget {
   final bool canDismiss;
   final Function? dismissCallBack;
   final Function? doneCallBack;
+  final List<Function>? nextStepCallBacks;
+  final List<Function>? preStepCallBacks;
 
   @override
   State<MaskGuideWidget> createState() => _MaskGuideWidgetState();
@@ -107,6 +111,8 @@ class _MaskGuideWidgetState extends State<MaskGuideWidget> {
             keys: widget.keys,
             guideTexts: widget.guideTexts,
             needAnimate: widget.needAnimate,
+            nextStepCallBacks: widget.nextStepCallBacks,
+            preStepCallBacks: widget.preStepCallBacks,
           ),
         ],
       ),

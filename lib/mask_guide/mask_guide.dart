@@ -17,12 +17,20 @@ class MaskGuide {
     bool? canDismiss,
     Function? dismissCallBack,
     Function? doneCallBack,
+    List<Function>? nextStepCallBacks,
+    List<Function>? preStepCallBacks,
   }) {
     if (customStepWidget == null && guideTexts == null) {
       throw('自定义提示组件和需要展示的提示其中一个必不能为空');
     }
     if (customStepWidget == null && keys.length != guideTexts!.length) {
       throw('不使用自定义提示组件时，key的数量需要和引导词的数量一致');
+    }
+    if (nextStepCallBacks != null && nextStepCallBacks.length != keys.length) {
+      throw('nextStepCallBacks长度必须与keys长度一致');
+    }
+    if (preStepCallBacks != null && preStepCallBacks.length != keys.length) {
+      throw('preStepCallBacks长度必须与keys长度一致');
     }
 
     overlayEntry = OverlayEntry(
@@ -36,6 +44,8 @@ class MaskGuide {
         canDismiss: canDismiss ?? false,
         dismissCallBack: dismissCallBack,
         doneCallBack: doneCallBack,
+        nextStepCallBacks: nextStepCallBacks,
+        preStepCallBacks: preStepCallBacks,
       ),
     );
 
